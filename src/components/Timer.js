@@ -79,11 +79,9 @@ const Timer = ({ expiration, timerExpired, isFlashing, setIsFlashing }) => {
         vertical="bottom"
       >
         {isExpired ? <Div>
-          {isFlashing ? <Button stretched size="l" onClick={(setIsFlashing(false))}>
+          <Button stretched size="l" onClick={(setIsFlashing(false))}>
             Остановить мигание
-          </Button> : <Button stretched size="l" disabled>
-            Не мигаю
-          </Button>}
+          </Button>
           <Spacing />
           <Button stretched size="l" mode='secondary' onClick={() => transition('/game/final')}>
             Показать шпионов

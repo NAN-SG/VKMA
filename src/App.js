@@ -64,6 +64,8 @@ const locations = [
   "Купол Зингера"
 ]
 
+let ledState = false
+
 const App = withAdaptivity(({ viewWidth }) => {
 
   const [popout, setPopout] = useState(null)
@@ -80,8 +82,7 @@ const App = withAdaptivity(({ viewWidth }) => {
   const [activeCard, setActiveCard] = useState(0)
   const [expiration, setExpiration] = useState(new Date())
   const [isFlashing, setIsFlashing] = useState(false)
-  const [ledState, setLedState] = useState(false)
-  const [isFlashSupported, setIsFlashSupported] = useState(false)
+  const [isFlashSupported, setIsFlashSupported] = useState(true)
 
   function startTimer(minutes) {
     const time = new Date()
@@ -91,33 +92,28 @@ const App = withAdaptivity(({ viewWidth }) => {
   let intId;
 
   useEffect(() => {
-    bridge.send('VKWebAppFlashGetInfo')
-      .then(data => {
-        setIsFlashSupported(data.supported)
-      })
+    
+      transition('/game')
   }, [])
 
   useEffect(() => {
 
     if (isFlashing) {
       intId = setInterval(() => {
-        setLedState(!ledState)
+        bridge.send('VKWebAppFlashSetLevel', { level: ledState ? 1 : 0 })
+        .catch((e) => {
+          console.log(e)
+          // showSnackbar('Не удалось включить фонарик')
+        })
+        ledState = !ledState
       }, 1000);
     } else {
       clearInterval(intId);
-      setLedState(false)
+      bridge.send('VKWebAppFlashSetLevel', { level: 0 })
     }
   }, [isFlashing])
 
-  useEffect(() => {
-//     if (bridge.supports('VKWebAppFlashSetLevel') && isFlashSupported) {
-      bridge.send('VKWebAppFlashSetLevel', { level: ledState ? 1 : 0 })
-        .catch((e) => {
-          console.log(e)
-          showSnackbar('Не удалось включить фонарик')
-        })
-//     }
-  }, [ledState])
+ 
 
   function showSnackbar(txt, iconType = null, actLabel = null, action = null) {
     let icon
