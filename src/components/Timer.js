@@ -49,6 +49,7 @@ const Timer = ({ expiration, timerExpired, isFlashing, setIsFlashing }) => {
     expiryTimestamp: expiration, onExpire: () => {
       timerExpired()
       setIsExpired(true)
+      setIsFlashing(true)
     }
   });
 
