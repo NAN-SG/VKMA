@@ -94,10 +94,6 @@ const Timer = ({ expiration, timerExpired, isFlashing, setIsFlashing }) => {
           </Button> : <Button stretched size="l" onClick={resume}>
             Возобновить
           </Button>}
-          <Spacing />
-          <Button stretched size="l" mode='secondary' onClick={() => restart(new Date() - 1)}>
-            Завершить дострочно
-          </Button>
         </Div>}
 
       </FixedLayout>
