@@ -110,13 +110,13 @@ const App = withAdaptivity(({ viewWidth }) => {
   }, [isFlashing])
 
   useEffect(() => {
-    if (bridge.supports('VKWebAppFlashSetLevel') && isFlashSupported) {
+//     if (bridge.supports('VKWebAppFlashSetLevel') && isFlashSupported) {
       bridge.send('VKWebAppFlashSetLevel', { level: ledState ? 1 : 0 })
         .catch((e) => {
           console.log(e)
           showSnackbar('Не удалось включить фонарик')
         })
-    }
+//     }
   }, [ledState])
 
   function showSnackbar(txt, iconType = null, actLabel = null, action = null) {
