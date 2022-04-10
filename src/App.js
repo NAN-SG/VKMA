@@ -92,19 +92,26 @@ const App = withAdaptivity(({ viewWidth }) => {
   let intId;
 
   useEffect(() => {
-    
-      transition('/game')
+
+    transition('/game')
   }, [])
 
   useEffect(() => {
 
+    bridge.send('VKWebAppStorageGet', { keys: ['userLocations'] })
+      .then(data => {
+        if (data.keys[0].value.length > 0) {
+          setUserLocations(JSON.parse(data.keys[0].value))
+        }
+      })
+
     if (isFlashing) {
       intId = setInterval(() => {
         bridge.send('VKWebAppFlashSetLevel', { level: ledState ? 1 : 0 })
-        .catch((e) => {
-          console.log(e)
-          // showSnackbar('Не удалось включить фонарик')
-        })
+          .catch((e) => {
+            console.log(e)
+            // showSnackbar('Не удалось включить фонарик')
+          })
         ledState = !ledState
       }, 1000);
     } else {
@@ -113,7 +120,7 @@ const App = withAdaptivity(({ viewWidth }) => {
     }
   }, [isFlashing])
 
- 
+
 
   function showSnackbar(txt, iconType = null, actLabel = null, action = null) {
     let icon
@@ -150,6 +157,7 @@ const App = withAdaptivity(({ viewWidth }) => {
 
   function putUL(loc) {
     setUserLocations([...userLocations, loc]);
+    bridge.send('VKWebAppStorageSet', { key: 'userLocations', value: JSON.stringify(userLocations) })
   }
 
   function removeUL(index) {
